@@ -1,0 +1,36 @@
+WiFi dongle:
+	rtl8192eu 
+
+Openwrt Linux :
+	5.4.154
+
+Openwrt platform :
+	mt7688 LinkIt Smart 7688
+
+Driver version :
+	v5.6.4_35685.20191108_COEX20171113-0047
+
+//---make 8192eu.ko
+//---pacakge build
+untar 
+copy rtl8192eu/ to openrt/package/kernel
+make openrt/package/kernel/rtl8192eu/compile V=s
+
+8192eu.ko at 
+	openwrt/staging_dir/target-mipsel_musl/root-ramips/lib/modules/5.4.154/
+
+//---verify
+
+#vi /etc/hostapd.conf                                           
+interface=wlan2
+driver=nl80211
+ssid=greatcat7
+hw_mode=g
+channel=1
+bridge=br-lan
+
+
+hostapd -d -B /etc/hostapd.conf &
+
+# PC Wifi find a AP named greatcat7
+# PC login AP and get IP 192.168.1.x
