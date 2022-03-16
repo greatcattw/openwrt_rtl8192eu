@@ -1,5 +1,5 @@
 WiFi dongle:
-	rtl8192eu 
+	rtl8192eu 0bda:818b
 
 Openwrt Linux :
 	5.4.154
