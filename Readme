@@ -34,3 +34,7 @@ hostapd -d -B /etc/hostapd.conf &
 
 # PC Wifi find a AP named greatcat7
 # PC login AP and get IP 192.168.1.x
+
+
+//----patch001
+overwrite untar with patch001/rtl8192eu/src/os_dep/linux/ioctl_cfg80211.c
