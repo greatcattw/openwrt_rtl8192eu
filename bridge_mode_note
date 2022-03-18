@@ -1,0 +1,51 @@
+#verify
+
+[Lab] WiFi bridge
+
+[PC] --- [waln2:AP:greatcat7 | mt7688 | wlan1:station] --- [AP:greatcat2G4:192.168.2.1]
+
+#For supporting WiFi brdige mode, openwrt need to modify cfg80211.ko
+#Refer to Realtek's document of Quick_Start_Guide_for_Bridge.pdf
+#Or github:greatcattw/openwrt_rtl8822bu
+
+cat /etc/hostapd.conf
+
+interface=wlan2
+driver=nl80211
+ssid=greatcat7
+hw_mode=g
+channel=1
+bridge=br0
+
+
+echo 1 > /proc/net/rtl8192eu/log_level
+
+ifconfig -a
+ifconfig wlan1 up
+iwlist wlan1 scan
+iw wlan1 connect -w "greatcat2G4"
+
+
+brctl addbr br0 
+brctl addif br0 wlan1 
+brctl setfd br0 0 
+hostapd -d -B /etc/hostapd.conf 
+ifconfig br0 up 
+brctl show
+
+
+change bridge status form
+brctl show                                             
+bridge name     bridge id               STP enabled     interfaces              
+br-lan          7fff.9c65f920a914       no              eth0
+
+to
+brctl show                                             
+bridge name     bridge id               STP enabled     interfaces              
+br-lan          7fff.9c65f920a914       no              eth0                    
+br0             8000.000f024e41bd       no              wlan2                   
+                                                        wlan1
+-------
+#test
+#PC links to AP named greatcat7 and gets dhcp IP 192.168.2.x from greatcat5G
+ping 192.168.2.1
